@@ -70,6 +70,10 @@ namespace goodCalculator
         #endregion
 
         #region действия
+        private void buttonDecimalSign_Click(object sender, EventArgs e)
+        {
+            textBox.Text += ",";
+        }
         private void buttonPlus_Click(object sender, EventArgs e)
         {
             textBox.Text += " + ";
@@ -97,7 +101,21 @@ namespace goodCalculator
         {
             textBox.Clear();
         }
+        private void buttonResult_Click(object sender, EventArgs e)
+        {
+            textBox.Text += "  ";
+            calculated();
+        }
 
+        private void buttonPercent_Click(object sender, EventArgs e)
+        {
+            percent();
+        }
+
+        private void buttonClearSymbol_Click(object sender, EventArgs e)
+        {
+            textBox.Text = textBox.Text.Remove(textBox.Text.Length - 1);
+        }
         #endregion
 
         #region methods
@@ -106,8 +124,8 @@ namespace goodCalculator
             string[] stroke = textBox.Text.Split();
             if (textBox.Text.Contains(stroke[1]) && stroke.Count() > 3)
             {
-                int num1 = int.Parse(stroke[0]);
-                int num2 = int.Parse(stroke[2]);
+                double num1 = double.Parse(stroke[0]);
+                double num2 = double.Parse(stroke[2]);
 
                 switch(char.Parse(stroke[1]))
                 {
@@ -126,6 +144,15 @@ namespace goodCalculator
                 }
             }
         }
+
+        public void percent()
+        {
+            double num = double.Parse(textBox.Text);
+
+            textBox.Text = (num / 100).ToString();
+        }
         #endregion
+
+ 
     }
 }
