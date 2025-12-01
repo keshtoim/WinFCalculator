@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace goodCalculator
 {
@@ -15,6 +16,10 @@ namespace goodCalculator
         public Form1()
         {
             InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            textBox.AutoSize = false;
         }
 
         #region цифры
@@ -116,6 +121,72 @@ namespace goodCalculator
         {
             textBox.Text = textBox.Text.Remove(textBox.Text.Length - 1);
         }
+        private void buttonRootNumber_Click(object sender, EventArgs e)
+        {
+            double num = double.Parse(textBox.Text);
+            double result = Math.Sqrt(num);
+            textBox.Text = result.ToString();
+        }
+
+        private void buttonNumberSquare_Click(object sender, EventArgs e)
+        {
+            double num = double.Parse(textBox.Text);
+            double result = Math.Pow(num, 2);
+            textBox.Text = result.ToString();
+        }
+
+        private void buttonThirdDegreeRoot_Click(object sender, EventArgs e)
+        {
+            double num = double.Parse(textBox.Text);
+            double result = Math.Pow(num, 1.0 / 3.0);
+            textBox.Text = result.ToString();
+        }
+        private void buttonCosine_Click(object sender, EventArgs e)
+        {
+            double num = double.Parse(textBox.Text) * Math.PI / 180;
+            double result = Math.Cos(num);
+            textBox.Text = result.ToString();
+        }
+
+        private void buttonSine_Click(object sender, EventArgs e)
+        {
+            double num = double.Parse(textBox.Text) * Math.PI / 180;
+            double result = Math.Sin(num);
+            textBox.Text = result.ToString();
+        }
+
+        private void textBox_TextChanged(object sender, EventArgs e)
+        {
+            const int minFontSize = 5;
+            const int maxFontSize = 20;
+            const int maxCharsForMinFont = 30;
+            const int normalFontThreshold = 10;
+
+
+            FontFamily fontFamily = new FontFamily("Microsoft Sans Serif");
+            int textLength = textBox.Text.Length;
+            FontStyle fontStyle = FontStyle.Bold;
+
+            if (textLength <= normalFontThreshold)
+            {
+                textBox.Font = new Font(fontFamily, maxFontSize, fontStyle);
+            }
+            else if (textLength > normalFontThreshold && textLength < maxCharsForMinFont)
+            {
+                float range = maxCharsForMinFont - normalFontThreshold;
+                float progress = (textLength - normalFontThreshold) / range;
+
+                float fontSize = maxFontSize - (maxFontSize - minFontSize) * progress;
+                fontSize = Math.Max(fontSize, minFontSize);
+
+                textBox.Font = new Font(fontFamily, fontSize, fontStyle);
+            }
+            else
+            {
+                textBox.Font = new Font(fontFamily, minFontSize, fontStyle);
+            }
+        }
+
         #endregion
 
         #region methods
@@ -127,20 +198,30 @@ namespace goodCalculator
                 double num1 = double.Parse(stroke[0]);
                 double num2 = double.Parse(stroke[2]);
 
+                double result = 0;
+
                 switch(char.Parse(stroke[1]))
                 {
                     case '+':
-                        textBox.Text = (num1 + num2).ToString();
+                        result = num1 + num2;
                         break;
                     case '-':
-                        textBox.Text = (num1 - num2).ToString();
+                        result = num1 - num2;
                         break;
                     case '*':
-                        textBox.Text = (num1 * num2).ToString();
+                        result = num1 * num2;
                         break;
                     case ':':
-                        textBox.Text = (num1 / num2).ToString();
+                        result = num1 / num2;
                         break;
+                }
+
+                textBox.Text = result.ToString();
+
+                if (textBox.Text.Length >= 6)
+                {
+                    int temp = (int)result;
+                    string hex = temp.ToString("X");
                 }
             }
         }
@@ -151,8 +232,7 @@ namespace goodCalculator
 
             textBox.Text = (num / 100).ToString();
         }
-        #endregion
 
- 
+        #endregion
     }
 }
